@@ -1,0 +1,54 @@
+Esercitazione Pratica: "Model Swapping" (Sostituzione dell'Architettura) 
+
+Contesto 
+Avete appena analizzato lo script che utilizza MobileNetV2 per classi care un'immagine. 
+MobileNet è ottima per dispositivi mobili perché è leggera, ma a volte abbiamo bisogno di reti più "potenti" o semplicemente diverse per confrontare i risultati. 
+In questo esercizio, metterete le mani "sotto il cofano" del codice appena visto. Dovrete sostituire il "cervello" (il modello neurale) con una delle architetture più famose della 
+storia della Computer Vision: la VGG16. 
+
+Obiettivo Modi care lo script Python fornito nell'esempio per: 
+1. Utilizzare l'architettura VGG16 al posto di MobileNetV2. 
+2. Cambiare l'immagine di input (scegliete un soggetto diverso da una fragola). 
+3. Visualizzare le Top-5 predizioni invece delle Top-3. 
+
+Istruzioni Passo-Passo 
+1. Modifica delle Importazioni (Attenzione!) 
+
+Il primo passo è cambiare le librerie che state importando. 
+- Task: Trovate all'interno di tensorflow.keras.applications il modulo per VGG16. 
+- Importante: Ogni rete ha il suo metodo preprocess_input. 
+Non potete usare quello di MobileNet per la VGG16, altrimenti i colori risulteranno "sbagliati" per la rete e la predizione sarà pessima. 
+Assicuratevi di importare preprocess_input e decode_predictions dal modulo corretto. 
+
+2. Sostituzione del Modello 
+Nella funzione che carica il modello:
+- Task: Istanziate la classe VGG16 invece di MobileNetV2 
+- Parametri: Mantenete weights='imagenet' e include_top=True (vogliamo classi care, non fare feature extraction). 
+
+3. Cambio dell'Immagine 
+- Task: Cambiate la variabile IMMAGINE_URL 
+- Suggerimento: Cercate su Google Images (es. Wikipedia Commons) l'URL di un oggetto ben de nito: un'auto sportiva, un elefante, un pianoforte. 
+Assicuratevi che l'URL termini con .jpg o .png 
+
+4. Espansione dei Risultati Nella funzione di classificazione: 
+- Task: Modi cate il parametro della funzione decode_predictions per farvi restituire le prime 5 classi più probabili, invece di 3. 
+
+Suggerimenti Tattici (Senza Soluzione) 
+-Dove trovo VGG16? Se MobileNet era in tensorflow.keras.applications.mobilenet_v2, dove pensate si trovi la VGG16? Provate a intuire il percorso o consultate la documentazione di Keras. 
+-Il Preprocessing è matematico
+MobileNet scala i pixel tra -1 e 1. VGG16 lavora in modo diverso (sottrae la media dei canali RGB del dataset ImageNet). 
+Se il vostro codice gira ma vi dice che un'auto sportiva è un "nematode" o un "worm", al 99% avete dimenticato di cambiare l'import di preprocess_input. 
+- Le dimensioni dell'immagine 
+VGG16, come MobileNet, è stata addestrata su immagini quadrate. Per fortuna, anche VGG16 accetta 224x224. 
+Quindi, la riga del resize non ha bisogno di modi che drastiche, ma controllate sempre di non aver toccato la logica del resize. 
+- Il download sembra bloccato? 
+VGG16 è un modello molto più "pesante" di MobileNet (circa 500MB contro 14MB). 
+La prima volta che lanciate lo script modi cato, il download dei pesi potrebbe impiegare qualche minuto. Abbiate pazienza! 
+
+Verifica del Successo
+Saprete di aver completato l'esercizio correttamente se: 
+1. Il download iniziale indica un le di dimensioni maggiori di 500MB ( le .h5 ). 
+2. Lo script non crasha. 
+3. Le predizioni stampate a video hanno senso per l'immagine che avete scelto (es. se avete scelto un leone, la top 1 deve essere "lion" o simile). 
+4. Vedete stampate 5 righe di risultati percentuali.
+
